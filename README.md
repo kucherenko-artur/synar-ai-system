@@ -2,7 +2,7 @@
   <img src="logo.png" alt="SYNAR logo" width="180" />
 </p>
 
-# SYNAR
+                                             # SYNAR
 **AI control and routing layer where models remain interchangeable and the system stays in control.**
 > This project focuses on debugging real AI system behavior, not just building around models.
 
