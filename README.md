@@ -6,12 +6,26 @@
 
 **AI control and routing layer where models remain interchangeable and the system stays in control.**
 
-**Website:** https://synar.dev  
-**Contact:** kucherenko1988artur1988@gmail.com
+🌐 https://synar.dev  
+✉️ kucherenko1988artur1988@gmail.com  
 
 ---
 
-## What SYNAR is
+## ⚡ What problem SYNAR solves
+
+Modern LLM-based systems break in predictable ways:
+
+- streaming is inconsistent or delayed  
+- long responses get cut off  
+- routing decisions fail under complexity  
+- prompt growth causes latency spikes  
+- system logic leaks into model behavior  
+
+SYNAR moves control out of fragile prompt behavior into a structured system layer.
+
+---
+
+## 🧠 What SYNAR is
 
 SYNAR is not designed as a single-model chatbot.
 
@@ -32,25 +46,50 @@ That means the model is replaceable, while SYNAR remains the stable controller.
 
 ---
 
-## Core architecture
+## 🏗 Core architecture
 
-```mermaid
-flowchart TD
-    U[User] --> C[SYNAR Core]
-    C --> P[Policy Layer]
-    C --> R[Routing Layer]
-    C --> I[Identity / Session Layer]
-    C --> PP[Prompt Pipeline]
-    C --> S[Streaming Controller]
-    C --> CC[Continuation Control]
-    C --> D[Runtime / Debug Layer]
-    C --> M[Memory Layer (planned)]
-    C --> L[Learning Layer (planned)]
-    C --> MI[Model Interface]
-    MI --> LM[Language Models]
+### Quick view
+
+```
+User
+  |
+  v
+SYNAR Core
+  |
+  v
+Control Layers (Policy / Routing / Runtime)
+  |
+  v
+Model Interface
+  |
+  v
+Language Models
 ```
 
-### Architectural rules
+### Full system
+
+```text
+User
+ ↓
+SYNAR Core
+ ├ Policy Layer
+ ├ Routing Layer
+ ├ Identity / Session Layer
+ ├ Prompt Pipeline
+ ├ Streaming Controller
+ ├ Continuation Control
+ ├ Runtime / Debug Layer
+ ├ Memory Layer (planned)
+ └ Learning Layer (planned)
+ ↓
+Model Interface
+ ↓
+Language Models
+```
+
+---
+
+## 🧩 Architectural rules
 
 - SYNAR is the controller, not the model.
 - Models must remain interchangeable.
@@ -61,11 +100,11 @@ flowchart TD
 
 ---
 
-## Current implementation direction
+## ⚙️ Current implementation direction
 
 SYNAR has been developed around a practical Node.js + Ollama stack with a modular backend direction.
 
-### Current backend direction
+### Backend direction
 
 - Node.js runtime
 - Ollama as local model runtime
@@ -73,7 +112,7 @@ SYNAR has been developed around a practical Node.js + Ollama stack with a modula
 - infrastructure separated from engine logic
 - file-based logs for routing and runtime diagnostics
 
-### Current operating concepts
+### Operating concepts
 
 - FAST / DEEP routing
 - intent-aware model selection
@@ -84,7 +123,7 @@ SYNAR has been developed around a practical Node.js + Ollama stack with a modula
 
 ---
 
-## Why SYNAR exists
+## 🔥 Why SYNAR exists
 
 Real model behavior in production-like conditions is often unstable.
 
@@ -102,7 +141,7 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 
 ---
 
-## Engineering challenges solved
+## 🛠 Engineering challenges solved
 
 ### 1. Streaming instability
 
@@ -117,6 +156,8 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 - chunk normalization
 - single source of truth for streamed output
 
+---
+
 ### 2. Output duplication
 
 **Observed**
@@ -127,6 +168,8 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 - removed secondary final reply push
 - removed unsafe tail reconstruction logic
 - enforced stream-first orchestration flow
+
+---
 
 ### 3. Response cutoffs
 
@@ -139,6 +182,8 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 - output-length aware handling
 - reduced false continuation signals
 
+---
+
 ### 4. Incorrect routing
 
 **Observed**
@@ -146,9 +191,11 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 - multilingual intent detection breaking on fragile regex patterns
 
 **Architectural response**
-- split `long_output_intent` from `deep_analysis_intent`
-- moved toward `intent -> policy -> route`
+- split intent layers
+- moved toward `intent → policy → route`
 - reduced dependence on brittle regex rules
+
+---
 
 ### 5. Monolithic server pressure
 
@@ -162,152 +209,139 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 
 ---
 
-## System modules
+## 🧠 System modules
 
 ### Identity / Session Layer
 
-SYNAR treats identity verification and system control as separate concerns.
+- Google OAuth and Email OTP verify user
+- SYNAR maintains its own session authority
+- future admin/creator visibility handled by system
 
-**Direction**
-- Google OAuth and Email OTP can verify the user
-- SYNAR keeps its own local session authority
-- future admin/creator visibility should be decided by SYNAR, not by model compliance
+---
 
 ### Routing Layer
 
-Routing is built around the idea that response length and reasoning depth are not the same problem.
-
-**Direction**
-- explicit mode override when needed
-- DEEP path for analysis and long structured outputs
-- FAST path for lightweight requests
+- explicit override support
+- DEEP path for analysis
+- FAST path for lightweight tasks
 - future confidence scoring
+
+---
 
 ### Prompt Pipeline
 
-Prompt assembly is treated as system infrastructure, not ad hoc prompting.
-
-**Direction**
 - system rules
 - identity rules
-- verified session state
+- session state
 - language anchor
-- chat history
+- history
 - user input
+
+---
 
 ### Streaming Controller
 
-Streaming is treated as a first-class subsystem.
-
-**Direction**
 - normalized chunk flow
 - UI-safe buffering
 - no duplicate aggregation
-- stable chunk rendering path
+- stable rendering path
+
+---
 
 ### Continuation Control
 
-Continuation should only happen when the output is actually incomplete.
-
-**Direction**
 - detect real truncation
-- avoid fake continuation states
-- reduce hallucinated or forced endings
+- avoid fake continuation
+- prevent forced endings
+
+---
 
 ### Memory Layer (planned)
 
-Future work is aimed at giving SYNAR memory as a controlled subsystem rather than letting the model blur prior context into unrelated replies.
+Controlled memory subsystem instead of implicit model memory.
+
+---
 
 ### Learning Layer (planned)
 
-The long-term goal is for SYNAR to learn from operation, corrections, routing outcomes, and quality signals without tying system intelligence to any single model.
+System-level learning independent from specific models.
 
 ---
 
-## Development path
+## 📈 Development path
 
-SYNAR has evolved through several practical phases:
-
-1. initial infrastructure and Ollama connection
-2. authentication layer with local session control
-3. UI rebuild for chat streaming and session handling
-4. server stabilization after migration to stronger hardware
-5. modular backend restructuring
-6. controlled continuation work
-7. model strategy refinement around local model constraints
-8. admin / creator-aware control direction
-9. memory and learning layer planning
-
-This matters because the project was not built as a static demo. It was shaped by debugging real behavior under changing runtime conditions.
+1. infrastructure + Ollama
+2. authentication layer
+3. UI + streaming fixes
+4. server stabilization
+5. modular backend
+6. continuation logic
+7. routing refinement
+8. creator control direction
+9. memory + learning planning
 
 ---
 
-## Current status
+## 📊 Current status
 
-### Stable or mostly stabilized
+### Stable
 
-- base UI flow
-- local auth direction
-- streaming path after fixes
-- routing architecture direction
-- modular core direction
-- runtime logging direction
+- UI
+- authentication
+- base routing
+- logging
+- modular direction
 
-### Still actively evolving
+### In progress
 
-- deeper routing reliability
+- routing reliability
 - memory isolation
-- creator/admin visibility rules
-- long-output stability under load
+- creator visibility
+- long-output stability
 - latency optimization
-- learning layer implementation
+- learning layer
 
 ---
 
-## Roadmap
+## 🛣 Roadmap
 
 ### Near-term
 
-- finish routing stabilization
-- harden continuation logic
-- isolate memory from unrelated answers
-- improve runtime telemetry
-- keep infrastructure and AI logic separated cleanly
+- routing stabilization
+- continuation hardening
+- telemetry improvements
 
 ### Mid-term
 
 - memory-aware routing
-- confidence scoring for intent and route selection
-- creator/admin control layer
-- stronger observability for stream and route decisions
+- confidence scoring
+- admin layer
 
 ### Long-term
 
 - SYNAR Memory Layer
 - SYNAR Learning Layer
-- model-agnostic policy governance
-- deeper orchestration across interchangeable model backends
+- model-agnostic governance
+- advanced orchestration
 
 ---
 
-## Project value
+## 💡 Project value
 
-SYNAR demonstrates practical work in:
+SYNAR demonstrates:
 
 - AI control-layer design
-- LLM routing and orchestration
+- LLM orchestration
 - streaming architecture
-- debugging unstable real-time model behavior
+- debugging real model behavior
 - prompt/system boundary design
 - backend modularization
-- AI infrastructure thinking beyond a single model
+- system-level AI thinking
 
 ---
 
-## Author
+## 👤 Author
 
 **Artur Kucherenko**  
-System architecture, AI control-layer design, routing logic, runtime debugging, and product direction.
-
-**Website:** https://synar.dev  
-**Email:** kucherenko1988artur1988@gmail.com
+🌐 https://synar.dev  
+✉️ kucherenko1988artur1988@gmail.com
