@@ -340,6 +340,14 @@ SYNAR demonstrates:
 
 ---
 
+## 🔬 Engineering Cases
+
+Real system debugging and architectural decisions are documented here:
+
+➡️ [SYNAR Engineering Challenges](./SYNAR_ENGINEERING_CASES.md)
+
+---
+
 ## 👤 Author
 
 **Artur Kucherenko**  
