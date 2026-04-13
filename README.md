@@ -1,82 +1,187 @@
-# SYNAR AI System (Prototype)
+<p align="center">
+  <img src="logo.png" width="220"/>
+</p>
 
-SYNAR is a personal AI system prototype designed as a **core intelligence layer** that can operate across different language models.
+<p align="center">
+  <b>AI Orchestration • Routing • Streaming • Control Layer</b>
+</p>
+# 🚀 SYNAR — AI Orchestration System
 
-The main idea is to separate:
-- **Core (logic, personality, rules)**
-- **Models (execution layer: fast / deep reasoning)**
+> Built by **Artur Kucherenko**  
+> AI Systems • QA • Model Evaluation • Debugging
 
-This approach allows building a **stable AI identity** independent of any single model.
+🔗 **Live Project / Repo:**  
+- https://github.com/kucherenko-artur/synar-ai-system  
+- https://github.com/kucherenko-artur/Artur-Kucherenko-QA  
+- https://synar.dev
+---
+
+## 💡 What is SYNAR
+
+SYNAR is not a chatbot.
+
+It is an **AI orchestration system** that controls:
+- how models are selected
+- how responses are generated
+- how output is delivered in real time
+
+Instead of relying on a single model, SYNAR introduces a structured pipeline:
+                        intent → policy → route
+
+
+This allows the system to distinguish between:
+- long-form responses  
+- deep analytical reasoning  
 
 ---
 
-## 🧠 Concept
+## 🧠 Why This Project Matters
 
-SYNAR is not just a chatbot.
+During development, multiple real-world AI issues were discovered:
 
-It is an attempt to build:
-- a persistent AI "core"
-- with controlled behavior
-- long-term memory (planned)
-- multi-model orchestration (FAST + DEEP)
+- responses were getting cut off  
+- streaming was unstable  
+- models produced inconsistent outputs  
+- simple models handled complex reasoning incorrectly  
 
----
-
-## ⚙️ Architecture (High-Level)
-
-- Core Controller (Node.js)
-- Model Layer (via Ollama)
-- API Layer (internal routing)
-- UI Layer (web interface)
-- Auth System (JWT + Email OTP)
+Instead of patching issues individually, the system was redesigned into a **controlled architecture layer above LLMs**.
 
 ---
 
-## 🚀 Current Status
+## ⚙️ Core Architecture
 
-- Core architecture: **stable**
-- Server: **running (Hetzner Cloud)**
-- HTTPS + Nginx: **configured**
-- Authentication: **working**
-- UI: **in progress**
-- Multi-model logic (FAST/DEEP): **testing phase**
-
----
-
-## 🔐 Important Note
-
-The source code is not publicly available.
-
-This repository is used as a **project presentation layer**:
-- architecture overview
-- development direction
-- system concept
+### 🔹 Orchestrator
+Controls the full lifecycle of each request:
+- input processing  
+- routing decisions  
+- response streaming  
 
 ---
 
-## 📌 Purpose
+### 🔹 Intent Layer
 
-This project is part of my engineering portfolio.
+Detects request type before execution:
 
-Goal:
-- demonstrate system thinking
-- backend architecture skills
-- real-world AI system design
+- `long_output_intent` → long-form response  
+- `deep_analysis_intent` → reasoning required  
 
 ---
 
-## 📍 Author
+### 🔹 Routing System
 
-Artur Kucherenko
+Priority:
+
+1. explicit mode  
+2. deep_analysis → DEEP model  
+3. long_output → DEEP model  
+4. fallback → FAST model  
+
+---
+
+### 🔹 Streaming Pipeline
+
+Custom-built to support:
+- real-time chunk delivery  
+- buffering  
+- stable UI updates  
 
 ---
 
-## 🧭 Future Plans
+## 🔥 Engineering Scope (What I Actually Did)
 
-- persistent memory system
-- improved model routing logic
-- UI stabilization
-- performance optimization
-- real user testing
+### 🧪 AI Behavior Analysis & QA
+
+- Investigated unstable model behavior across languages  
+- Compared FAST vs DEEP outputs  
+- Identified logical inconsistencies in responses  
+- Evaluated model quality under different conditions  
 
 ---
+
+### ⚡ Streaming & Real-Time Debugging
+
+- Fixed broken streaming (no chunks, delayed output)  
+- Solved response duplication (double aggregation bug)  
+- Eliminated response cutoffs in long outputs  
+- Built stable streaming pipeline  
+
+---
+
+### 🧭 Routing & System Design
+
+- Designed intent-based routing system  
+- Separated **response length vs reasoning complexity**  
+- Replaced fragile regex logic (multilingual issues)  
+- Built structured decision pipeline  
+
+---
+
+### 🖥️ Frontend & UI
+
+- Built UI from scratch  
+- Implemented real-time streaming rendering  
+- Connected frontend to backend orchestration layer  
+- Handled async state and response flow  
+
+---
+
+### 🛠️ Infrastructure & Deployment
+
+- Configured nginx + HTTPS  
+- Managed systemd services  
+- Worked with Cloudflare caching issues  
+- Maintained production-like environment  
+
+---
+
+## 🧩 Key Problems Solved
+
+### ❌ Streaming Failure → ✅ Real-Time Responses  
+### ❌ Response Duplication → ✅ Clean Output  
+### ❌ Response Cutoffs → ✅ Stable Long Answers  
+### ❌ Wrong Routing → ✅ Intent-Based Model Selection  
+
+---
+
+## 📊 What This Demonstrates
+
+This project shows:
+
+- Ability to debug real AI system behavior  
+- Understanding of model limitations  
+- Designing control layers above LLMs  
+- Working with unstable real-time systems  
+- Full-stack integration (UI ↔ backend ↔ models)  
+
+---
+
+## 📌 Current Status
+
+✔ Streaming stabilized  
+✔ Routing system working  
+✔ Output consistency improved  
+✔ System ready for expansion  
+
+---
+
+## 🔮 Next Steps
+
+- memory-aware routing  
+- intent confidence scoring  
+- lightweight intent classifier  
+
+---
+
+## 👤 Author
+
+**Artur Kucherenko**  
+AI QA • AI Systems • Debugging • Model Evaluation  
+
+📫 Open to:
+- AI Training roles  
+- AI Evaluation roles  
+- QA / Testing (AI systems)  
+
+---
+
+
