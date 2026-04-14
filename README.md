@@ -46,6 +46,14 @@ That means the model is replaceable, while SYNAR remains the stable controller.
 
 ---
 
+## 🔬 Engineering Cases
+
+Real system debugging and architectural decisions are documented here:
+
+➡️ [SYNAR Engineering Challenges](./SYNAR_ENGINEERING_CASES.md)
+
+---
+
 ## 🏗 Core architecture
 
 ### Quick view
@@ -337,14 +345,6 @@ SYNAR demonstrates:
 - prompt/system boundary design
 - backend modularization
 - system-level AI thinking
-
----
-
-## 🔬 Engineering Cases
-
-Real system debugging and architectural decisions are documented here:
-
-➡️ [SYNAR Engineering Challenges](./SYNAR_ENGINEERING_CASES.md)
 
 ---
 
