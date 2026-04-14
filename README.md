@@ -227,6 +227,19 @@ SYNAR exists to move those decisions out of fragile prompt-only behavior and int
 
 ---
 
+### 🖥 UI & Frontend Integration
+
+The UI was built and used as a real-time debugging surface for system behavior.
+
+- implemented streaming rendering in the browser  
+- handled async response flow and state updates  
+- debugged frontend ↔ backend interaction issues  
+- identified cases where UI exposed system-level bugs (duplication, cutoffs, delayed output)  
+
+This allowed direct observation of model behavior in real conditions.
+
+---
+
 ### Routing Layer
 
 - explicit override support
