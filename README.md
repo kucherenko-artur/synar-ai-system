@@ -3,365 +3,213 @@
 </p>
 
 # SYNAR
-**AI control and routing layer where models remain interchangeable and the system stays in control.**
-> This project focuses on debugging real AI system behavior, not just building around models.
+
+**Experimental multi-model AI orchestration system focused on reliability, transparency, and structured reasoning.**
+
+SYNAR explores a practical question:
+
+> Can multiple AI models work together more honestly and reliably than a single-model chatbot?
+
+SYNAR is not designed as a simple chatbot wrapper. Its core idea is a **Parliament architecture**: a system layer where model roles, routing, consensus signals, storage, and decision logs remain separated instead of being hidden inside one prompt.
 
 🌐 https://synar.dev  
-✉️ kucherenko1988artur1988@gmail.com  
+✉️ kucherenko1988artur1988@gmail.com
 
 ---
 
-## ⚡ What problem SYNAR solves
+## Current status
 
-Modern LLM-based systems break in predictable ways:
+SYNAR is an active prototype. It has evolved from a local LLM chat interface into a modular AI orchestration platform with:
 
-- streaming is inconsistent or delayed  
-- long responses get cut off  
-- routing decisions fail under complexity  
-- prompt growth causes latency spikes  
-- system logic leaks into model behavior  
+- multi-model orchestration;
+- Parliament-style decision flow;
+- early-stage consensus scoring;
+- model adapters;
+- persistent conversation and decision storage;
+- runtime logging and development logs;
+- a practical web UI for testing real model behavior.
 
-SYNAR moves control out of fragile prompt behavior into a structured system layer.
-
----
-
-## 🧠 What SYNAR is
-
-SYNAR is not designed as a single-model chatbot.
-
-It is a control layer built above language models to manage:
-
-- routing
-- policy
-- session identity
-- prompt assembly
-- streaming
-- continuation behavior
-- runtime control
-- future memory and learning layers
-
-> **The model generates. SYNAR decides.**
-
-That means the model is replaceable, while SYNAR remains the stable controller.
+This repository documents the architecture and development direction. Some live-server internals may be ahead of the public repository while the project is being cleaned and stabilized.
 
 ---
 
-## 🔬 Engineering Cases
+## What problem SYNAR explores
 
-Real system debugging and architectural decisions are documented here:
+Modern LLM systems often fail in ways that are hard to detect:
 
-➡️ [SYNAR Engineering Challenges](./SYNAR_ENGINEERING_CASES.md)
+- confident but unreliable answers;
+- weak uncertainty handling;
+- inconsistent behavior between models;
+- fragile prompt-only control;
+- poor separation between application logic and model behavior;
+- silent failure when routing, memory, or context grows complex.
+
+SYNAR moves part of the control out of fragile prompt behavior and into a structured orchestration layer.
+
+> **The model generates. SYNAR coordinates, compares, stores, and decides how the system should proceed.**
 
 ---
 
-## 🏗 Core architecture
-
-### Quick view
-
-```
-User
-  |
-  v
-SYNAR Core
-  |
-  v
-Control Layers (Policy / Routing / Runtime)
-  |
-  v
-Model Interface
-  |
-  v
-Language Models
-```
-
-### Full system
+## Core architecture
 
 ```text
 User
  ↓
-SYNAR Core
- ├ Policy Layer
- ├ Routing Layer
- ├ Identity / Session Layer
- ├ Prompt Pipeline
- ├ Streaming Controller
- ├ Continuation Control
- ├ Runtime / Debug Layer
- ├ Memory Layer (planned)
- └ Learning Layer (planned)
+SYNAR API / Web UI
  ↓
-Model Interface
+Orchestration Layer
+ ├─ Parliament Engine
+ ├─ Consensus Engine
+ ├─ Model Adapters
+ ├─ History / Storage Layer
+ ├─ Runtime Logs
+ └─ Policy / Routing Logic
  ↓
 Language Models
 ```
 
----
+### Main components
 
-## 🧩 Architectural rules
-
-- SYNAR is the controller, not the model.
-- Models must remain interchangeable.
-- Infrastructure must stay separate from AI logic.
-- `server.js` should remain infrastructure only.
-- Core AI behavior should live in modular engine files.
-- Long-term architecture is preferred over quick patching.
+- **Orchestration layer** — routes requests and coordinates model participation.
+- **Parliament engine** — manages structured multi-model decision flow.
+- **Consensus engine** — compares model outputs and estimates agreement signals.
+- **Model adapters** — isolates API/model-specific logic from the core system.
+- **History and storage layer** — stores conversations, decisions, and runtime data separately from model logic.
+- **Web interface** — provides a practical chat UI and testing surface.
 
 ---
 
-## ⚙️ Current implementation direction
+## Parliament architecture
 
-SYNAR has been developed around a practical Node.js + Ollama stack with a modular backend direction.
+The Parliament concept is the central design direction of SYNAR.
 
-### Backend direction
+Instead of treating one model as the only source of truth, SYNAR is designed around separated model roles and system-level judgment. The goal is not to make models magically correct, but to expose disagreement, compare responses, and make the decision process visible.
 
-- Node.js runtime
-- Ollama as local model runtime
-- modular AI logic in `core/`
-- infrastructure separated from engine logic
-- file-based logs for routing and runtime diagnostics
+Core principles:
 
-### Operating concepts
-
-- FAST / DEEP routing
-- intent-aware model selection
-- controlled streaming pipeline
-- continuation handling for truncated outputs
-- creator/admin-aware control direction
-- local session control over external authentication
+- models must remain interchangeable;
+- orchestration should be independent from any single provider;
+- consensus should be logged, not hidden;
+- uncertainty is a valid output;
+- system logic should not live entirely inside prompts;
+- history, routing, adapters, and consensus should remain separate modules.
 
 ---
 
-## 🔥 Why SYNAR exists
+## Consensus scoring
 
-Real model behavior in production-like conditions is often unstable.
+SYNAR includes an early-stage consensus mechanism that compares model responses and records agreement signals.
 
-During development, SYNAR was shaped by repeated system-level failures such as:
+This is experimental. It does **not** claim to guarantee correctness or eliminate hallucinations.
 
-- streaming arriving as a single full response instead of chunks
-- duplicated output caused by double aggregation
-- long responses being cut off
-- incorrect routing of complex requests into lightweight paths
-- prompt growth causing latency and instability
-- model behavior drift and identity leakage
-- weak separation between system logic and model behavior
+Current goal:
 
-SYNAR exists to move those decisions out of fragile prompt-only behavior and into a controllable architecture layer.
+- detect obvious divergence;
+- compare response similarity;
+- support future confidence scoring;
+- create a transparent record of model agreement/disagreement.
 
----
+Future direction:
 
-## 🛠 Engineering challenges solved
-
-### 1. Streaming instability
-
-**Observed**
-- delayed full-text delivery instead of chunked streaming
-- broken real-time UX
-- inconsistent Ollama chunk handling
-
-**Architectural response**
-- stream adapter
-- buffer layer
-- chunk normalization
-- single source of truth for streamed output
+- stronger semantic comparison;
+- confidence thresholds;
+- structured critique roles;
+- adversarial model review;
+- better evaluation datasets.
 
 ---
 
-### 2. Output duplication
+## Why this project matters
 
-**Observed**
-- duplicated final responses after streaming
-- backend and orchestrator both pushing content
+Most AI demos show successful outputs. SYNAR focuses on the harder part: what happens when model behavior is unstable, incomplete, contradictory, or overconfident.
 
-**Architectural response**
-- removed secondary final reply push
-- removed unsafe tail reconstruction logic
-- enforced stream-first orchestration flow
+During development, SYNAR was shaped by real system-level problems:
 
----
+- streaming arriving as one delayed full response instead of chunks;
+- duplicated output caused by double aggregation;
+- long responses being cut off;
+- incorrect routing of complex prompts into lightweight paths;
+- growing context causing latency and instability;
+- weak separation between system logic and model behavior;
+- need for persistent logs and auditable decisions.
 
-### 3. Response cutoffs
-
-**Observed**
-- incomplete long responses
-- continuation flags failing to match actual output state
-
-**Architectural response**
-- controlled continuation logic
-- output-length aware handling
-- reduced false continuation signals
+The project treats these failures as architectural data, not just bugs.
 
 ---
 
-### 4. Incorrect routing
+## Tech stack
 
-**Observed**
-- long or analytical prompts falling into FAST paths
-- multilingual intent detection breaking on fragile regex patterns
-
-**Architectural response**
-- split intent layers
-- moved toward `intent → policy → route`
-- reduced dependence on brittle regex rules
+- **Backend:** Node.js, Express
+- **Storage:** SQLite
+- **Frontend:** HTML, CSS, JavaScript
+- **Deployment:** Linux server, nginx, Cloudflare
+- **AI layer:** local and API-based LLM adapters
+- **Runtime direction:** modular core with separated orchestration, adapters, storage, and UI
 
 ---
 
-### 5. Monolithic server pressure
+## Repository focus
 
-**Observed**
-- too much AI logic drifting into infrastructure entrypoints
-- increased maintenance risk
+This repository is intended to demonstrate:
 
-**Architectural response**
-- move core AI logic into modular engine files
-- keep `server.js` focused on infrastructure responsibilities
-
----
-
-## 🧠 System modules
-
-### Identity / Session Layer
-
-- Google OAuth and Email OTP verify user
-- SYNAR maintains its own session authority
-- future admin/creator visibility handled by system
+- AI orchestration architecture;
+- backend modularization;
+- LLM API integration;
+- model-agnostic system design;
+- consensus and reliability experiments;
+- QA-oriented thinking around failure cases;
+- development discipline through logs and known-issue tracking.
 
 ---
 
-### 🖥 UI & Frontend Integration
+## Documentation
 
-The UI was built and used as a real-time debugging surface for system behavior.
+Key documentation includes:
 
-- implemented streaming rendering in the browser  
-- handled async response flow and state updates  
-- debugged frontend ↔ backend interaction issues  
-- identified cases where UI exposed system-level bugs (duplication, cutoffs, delayed output)  
-
-This allowed direct observation of model behavior in real conditions.
+- `PARLIAMENT_ARCHITECTURE.md` — Parliament design and roles;
+- `KNOWN_ISSUES.md` — active limitations and known problems;
+- development logs — project evolution and implementation notes;
+- engineering case notes — debugging and architectural decisions.
 
 ---
 
-### Routing Layer
-
-- explicit override support
-- DEEP path for analysis
-- FAST path for lightweight tasks
-- future confidence scoring
-
----
-
-### Prompt Pipeline
-
-- system rules
-- identity rules
-- session state
-- language anchor
-- history
-- user input
-
----
-
-### Streaming Controller
-
-- normalized chunk flow
-- UI-safe buffering
-- no duplicate aggregation
-- stable rendering path
-
----
-
-### Continuation Control
-
-- detect real truncation
-- avoid fake continuation
-- prevent forced endings
-
----
-
-### Memory Layer (planned)
-
-Controlled memory subsystem instead of implicit model memory.
-
----
-
-### Learning Layer (planned)
-
-System-level learning independent from specific models.
-
----
-
-## 📈 Development path
-
-1. infrastructure + Ollama
-2. authentication layer
-3. UI + streaming fixes
-4. server stabilization
-5. modular backend
-6. continuation logic
-7. routing refinement
-8. creator control direction
-9. memory + learning planning
-
----
-
-## 📊 Current status
-
-### Stable
-
-- UI
-- authentication
-- base routing
-- logging
-- modular direction
-
-### In progress
-
-- routing reliability
-- memory isolation
-- creator visibility
-- long-output stability
-- latency optimization
-- learning layer
-
----
-
-## 🛣 Roadmap
+## Roadmap
 
 ### Near-term
 
-- routing stabilization
-- continuation hardening
-- telemetry improvements
+- clean public repository structure;
+- update documentation to match the live architecture;
+- improve README and architecture diagrams;
+- separate production code from backups and runtime data;
+- add `.env.example` and stronger setup notes.
 
 ### Mid-term
 
-- memory-aware routing
-- confidence scoring
-- admin layer
+- stronger semantic consensus logic;
+- better test coverage;
+- clearer model-role separation;
+- improved telemetry and evaluation logs;
+- UI improvements for multi-chat workflows and model visibility.
 
 ### Long-term
 
-- SYNAR Memory Layer
-- SYNAR Learning Layer
-- model-agnostic governance
-- advanced orchestration
+- advanced Parliament roles;
+- memory-aware orchestration;
+- confidence scoring;
+- model-agnostic governance layer;
+- stronger reliability testing framework.
 
 ---
 
-## 💡 Project value
+## Important note
 
-SYNAR demonstrates:
+SYNAR is an experimental project. It is not presented as a finished commercial AI product or a correctness guarantee.
 
-- AI control-layer design
-- LLM orchestration
-- streaming architecture
-- debugging real model behavior
-- prompt/system boundary design
-- backend modularization
-- system-level AI thinking
+Its value is in exploring architecture, reliability, model collaboration, transparent decision flow, and practical AI system debugging.
 
 ---
 
-## 👤 Author
+## Author
 
 **Artur Kucherenko**  
 🌐 https://synar.dev  
